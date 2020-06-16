@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">驿站</string>
+    <string name="Homepage">首页</string>
+    <string name="Friend">好友</string>
+    <string name="Me">我的</string>
+</resources>
