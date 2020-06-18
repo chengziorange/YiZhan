@@ -19,6 +19,4 @@ data class News(
     var body: String?,
 
     var css: List<String>?
-) {
-    constructor() : this(null, null, null, null, null, null, null, null)
-}
+)

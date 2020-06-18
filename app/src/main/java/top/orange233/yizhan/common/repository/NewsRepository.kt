@@ -15,4 +15,14 @@ class NewsRepository private constructor(private val newsService: NewsService) {
         newsService.getLatestNews()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+
+    fun getBeforeNews(date: String) =
+        newsService.getBeforeNews(date)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
+    fun getNewsById(newsId: Int) =
+        newsService.getNewsById(newsId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 
 abstract class BaseFragment : Fragment() {
@@ -31,7 +30,4 @@ abstract class BaseFragment : Fragment() {
 
     protected abstract fun initEvent()
 
-    protected fun <T : View> findViewById(@IdRes id: Int): T? {
-        return rootView.findViewById(id)
-    }
 }

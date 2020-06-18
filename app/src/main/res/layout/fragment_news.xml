@@ -11,7 +11,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:srlEnableNestedScrolling="true"
+        app:srlHeaderTriggerRate="0.6">
 
         <com.scwang.smart.refresh.header.MaterialHeader
             android:id="@+id/refresh_header"
@@ -22,13 +24,13 @@
             android:id="@+id/rv_news"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:nestedScrollingEnabled="true"
             android:overScrollMode="never" />
 
         <com.scwang.smart.refresh.footer.BallPulseFooter
             android:id="@+id/refresh_footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="true"
             app:srlAnimatingColor="@color/colorAccent"
             app:srlNormalColor="@color/colorAccent" />
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>

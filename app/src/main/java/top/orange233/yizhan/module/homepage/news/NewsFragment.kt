@@ -1,14 +1,10 @@
 package top.orange233.yizhan.module.homepage.news
 
+import android.content.Context
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.orhanobut.logger.Logger
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_news.*
 import top.orange233.yizhan.R
-import top.orange233.yizhan.data.News
 import top.orange233.yizhan.module.base.BaseFragment
-import top.orange233.yizhan.common.network.NewsService
 
 class NewsFragment : BaseFragment(), NewsContract.View {
     private lateinit var presenter: NewsPresenter
@@ -28,16 +24,18 @@ class NewsFragment : BaseFragment(), NewsContract.View {
 
     override fun initEvent() {
         refresh_layout.setOnRefreshListener { refreshLayout ->
-            presenter.refreshNewsList()
-            refreshLayout.finishRefresh(2000)
+            refreshLayout.finishRefresh(presenter.refreshNewsList())
         }
         refresh_layout.setOnLoadMoreListener { refreshLayout ->
-            presenter.getMoreNews()
-            refreshLayout.finishLoadMore(2000)
+            refreshLayout.finishLoadMore(presenter.loadMoreNews())
+            // 谜之bug，需要重新设置header，避免下拉刷新距离变得很长
+            refreshLayout.setRefreshHeader(refresh_header)
         }
     }
 
     override fun updateNewsList() {
         presenter.getAdapter().notifyDataSetChanged()
     }
+
+    override fun getViewContext(): Context = requireContext()
 }
