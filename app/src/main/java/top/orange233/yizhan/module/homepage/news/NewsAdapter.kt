@@ -30,9 +30,7 @@ class NewsAdapter(
         newsList?.apply { holder.bind(this[position], position) }
     }
 
-    inner class NewsViewHolder(view: View) : RecyclerView.ViewHolder(
-        view
-    ) {
+    inner class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(news: News, position: Int) = with(itemView) {
             news_title.text = news.title
             Glide.with(itemView).load(news.smallImageUrl?.get(0)).into(news_image)

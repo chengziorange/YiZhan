@@ -7,7 +7,6 @@ interface NewsContract {
     interface View {
         fun getViewContext(): Context
         fun updateNewsList()
-        fun fetchOnFirstOpen()
         fun finishRefresh()
         fun finishLoadMore()
     }

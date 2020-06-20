@@ -4,7 +4,7 @@ import android.content.Intent
 import top.orange233.yizhan.common.repository.NewsRepository
 import top.orange233.yizhan.data.News
 import top.orange233.yizhan.module.homepage.news.reader.NewsReaderActivity
-import top.orange233.yizhan.util.NewsDateFormatter
+import top.orange233.yizhan.util.DateFormatter
 import java.util.*
 
 class NewsPresenter(private val view: NewsContract.View) : NewsContract.Presenter,
@@ -27,10 +27,10 @@ class NewsPresenter(private val view: NewsContract.View) : NewsContract.Presente
     }
 
     override fun loadMoreNews() {
-        if (dateToLoad < NewsDateFormatter.getOldestNewsDate()) {
+        if (dateToLoad < DateFormatter.getOldestNewsDate()) {
             return
         }
-        NewsRepository.getInstance().getBeforeNews(NewsDateFormatter.format(dateToLoad.time))
+        NewsRepository.getInstance().getBeforeNews(DateFormatter.formatNewsDate(dateToLoad.time))
             .subscribe({
                 newsList?.addAll(it.stories.toMutableList())
                 view.updateNewsList()
@@ -46,12 +46,13 @@ class NewsPresenter(private val view: NewsContract.View) : NewsContract.Presente
         if (newsAdapter == null) {
             newsAdapter = NewsAdapter(newsList, this)
         }
-        view.fetchOnFirstOpen()
     }
 
     override fun onClickNews(news: News) {
         val intent = Intent(view.getViewContext(), NewsReaderActivity::class.java)
         intent.putExtra(NewsReaderActivity.NEWS_ID, news.newsId)
+        intent.putExtra(NewsReaderActivity.NEWS_URL, news.url)
+        intent.putExtra(NewsReaderActivity.NEWS_TITLE, news.title)
         view.getViewContext().startActivity(intent)
     }
 

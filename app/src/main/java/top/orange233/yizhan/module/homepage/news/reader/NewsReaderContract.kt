@@ -1,14 +1,16 @@
 package top.orange233.yizhan.module.homepage.news.reader
 
-import top.orange233.yizhan.data.News
 import top.orange233.yizhan.module.base.BasePresenter
 
 class NewsReaderContract {
     interface View {
-        fun updateNewsView(news: News)
+        fun finishRefreshPage()
+        fun finishLoadMore()
     }
 
     interface Presenter : BasePresenter {
-        fun getNewsContent(newsId: Int)
+        fun getAdapter(): NewsCommentAdapter
+        fun refreshPage()
+        fun loadMoreComment()
     }
 }

@@ -25,6 +25,7 @@ class NewsFragment : BaseFragment(), NewsContract.View {
     override fun initEvent() {
         refresh_layout.setOnRefreshListener { presenter.refreshNewsList() }
         refresh_layout.setOnLoadMoreListener { presenter.loadMoreNews() }
+        refresh_layout.autoRefresh()
     }
 
     override fun updateNewsList() {
@@ -32,10 +33,6 @@ class NewsFragment : BaseFragment(), NewsContract.View {
     }
 
     override fun getViewContext(): Context = requireContext()
-
-    override fun fetchOnFirstOpen() {
-        refresh_layout.autoRefresh()
-    }
 
     override fun finishRefresh() {
         refresh_layout.finishRefresh(true)
