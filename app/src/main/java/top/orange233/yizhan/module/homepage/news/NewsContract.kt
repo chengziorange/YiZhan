@@ -8,11 +8,13 @@ interface NewsContract {
         fun getViewContext(): Context
         fun updateNewsList()
         fun fetchOnFirstOpen()
+        fun finishRefresh()
+        fun finishLoadMore()
     }
 
     interface Presenter : BasePresenter {
         fun getAdapter(): NewsAdapter
-        fun refreshNewsList(): Boolean
-        fun loadMoreNews(): Boolean
+        fun refreshNewsList()
+        fun loadMoreNews()
     }
 }

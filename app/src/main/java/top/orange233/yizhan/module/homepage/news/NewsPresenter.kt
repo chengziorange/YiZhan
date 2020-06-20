@@ -3,46 +3,40 @@ package top.orange233.yizhan.module.homepage.news
 import android.content.Intent
 import top.orange233.yizhan.common.repository.NewsRepository
 import top.orange233.yizhan.data.News
+import top.orange233.yizhan.module.homepage.news.reader.NewsReaderActivity
 import top.orange233.yizhan.util.NewsDateFormatter
 import java.util.*
 
-class NewsPresenter(private var view: NewsContract.View) : NewsContract.Presenter,
+class NewsPresenter(private val view: NewsContract.View) : NewsContract.Presenter,
     NewsAdapter.ItemViewOnClickListener {
 
     private var newsList: MutableList<News>? = null
     private var newsAdapter: NewsAdapter? = null
     private var dateToLoad: Calendar = Calendar.getInstance()
 
-    override fun refreshNewsList(): Boolean {
-        var isSuccess = false
+    override fun refreshNewsList() {
         NewsRepository.getInstance().getLatestNews()
             .subscribe({
                 newsList?.clear()
                 newsList?.addAll(it.stories)
                 view.updateNewsList()
+                view.finishRefresh()
                 dateToLoad = Calendar.getInstance()
-                isSuccess = true
             }, {
-                isSuccess = false
             })
-        return isSuccess
     }
 
-    override fun loadMoreNews(): Boolean {
-        var isSuccess = false
+    override fun loadMoreNews() {
         if (dateToLoad < NewsDateFormatter.getOldestNewsDate()) {
-            return false
+            return
         }
         NewsRepository.getInstance().getBeforeNews(NewsDateFormatter.format(dateToLoad.time))
             .subscribe({
                 newsList?.addAll(it.stories.toMutableList())
                 view.updateNewsList()
-                isSuccess = true
+                view.finishLoadMore()
                 dateToLoad.set(Calendar.DATE, -1)
-            }, {
-                isSuccess = false
-            })
-        return isSuccess
+            }, {})
     }
 
     override fun start() {
