@@ -28,8 +28,6 @@ class NewsFragment : BaseFragment(), NewsContract.View {
         }
         refresh_layout.setOnLoadMoreListener { refreshLayout ->
             refreshLayout.finishLoadMore(presenter.loadMoreNews())
-            // 谜之bug，需要重新设置header，避免下拉刷新距离变得很长
-            refreshLayout.setRefreshHeader(refresh_header)
         }
     }
 

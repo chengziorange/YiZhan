@@ -1,23 +1,20 @@
 package top.orange233.yizhan.module.homepage
 
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import top.orange233.yizhan.module.homepage.anime.AnimeFragment
 import top.orange233.yizhan.module.homepage.comic.ComicFragment
 import top.orange233.yizhan.module.homepage.news.NewsFragment
 
-class HomepageAdapter(f: Fragment) : FragmentStateAdapter(f) {
+class HomepageAdapter(fm: FragmentManager) :
+    FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val homepageFragments: List<Fragment> =
         listOf(NewsFragment(), ComicFragment(), AnimeFragment())
 
-    override fun getItemCount(): Int = 3
+    override fun getItem(position: Int): Fragment = homepageFragments[position]
 
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> homepageFragments[0]
-            1 -> homepageFragments[1]
-            2 -> homepageFragments[2]
-            else -> throw Throwable("Unknown homepage category.")
-        }
-    }
+    override fun getCount(): Int = homepageFragments.size
+
+    override fun getPageTitle(position: Int): CharSequence? = listOf("资讯", "漫画", "番剧")[position]
 }
