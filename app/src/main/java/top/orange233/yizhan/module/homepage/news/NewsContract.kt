@@ -7,6 +7,7 @@ interface NewsContract {
     interface View {
         fun getViewContext(): Context
         fun updateNewsList()
+        fun fetchOnFirstOpen()
     }
 
     interface Presenter : BasePresenter {

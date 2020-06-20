@@ -12,7 +12,6 @@ class MainActivity : BaseActivity() {
 
     override fun initView() {
         immersionBar {
-            transparentStatusBar()
             statusBarDarkFont(true)
             fitsSystemWindows(true)
         }

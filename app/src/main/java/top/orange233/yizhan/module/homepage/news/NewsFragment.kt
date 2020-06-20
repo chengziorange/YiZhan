@@ -38,4 +38,8 @@ class NewsFragment : BaseFragment(), NewsContract.View {
     }
 
     override fun getViewContext(): Context = requireContext()
+
+    override fun fetchOnFirstOpen() {
+        refresh_layout.autoRefresh()
+    }
 }

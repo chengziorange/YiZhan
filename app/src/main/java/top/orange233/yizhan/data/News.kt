@@ -8,8 +8,11 @@ data class News(
 
     var url: String?,
 
+    @SerializedName("image")
+    var imageUrl: String?,
+
     @SerializedName("images")
-    var imageUrl: List<String>?,
+    var smallImageUrl: List<String>?,
 
     @SerializedName("image_source")
     var imageSource: String?,

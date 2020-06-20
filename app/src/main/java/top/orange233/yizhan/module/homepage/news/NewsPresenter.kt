@@ -1,5 +1,6 @@
 package top.orange233.yizhan.module.homepage.news
 
+import android.content.Intent
 import top.orange233.yizhan.common.repository.NewsRepository
 import top.orange233.yizhan.data.News
 import top.orange233.yizhan.util.NewsDateFormatter
@@ -51,11 +52,13 @@ class NewsPresenter(private var view: NewsContract.View) : NewsContract.Presente
         if (newsAdapter == null) {
             newsAdapter = NewsAdapter(newsList, this)
         }
-        refreshNewsList()
+        view.fetchOnFirstOpen()
     }
 
     override fun onClickNews(news: News) {
-        //TODO
+        val intent = Intent(view.getViewContext(), NewsReaderActivity::class.java)
+        intent.putExtra(NewsReaderActivity.NEWS_ID, news.newsId)
+        view.getViewContext().startActivity(intent)
     }
 
     override fun getAdapter(): NewsAdapter = newsAdapter!!
