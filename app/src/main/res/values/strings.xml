@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">YiZhan</string>
-    <string name="Homepage">Home page</string>
-    <string name="Friend">Friend</string>
-    <string name="Me">Me</string>
+    <string name="homepage">Home page</string>
+    <string name="friend">Friend</string>
+    <string name="me">Me</string>
+    <string name="login_userid">Username/Email/Phone Number</string>
+    <string name="login_password">Password</string>
+    <string name="login">Login</string>
 </resources>

@@ -11,11 +11,6 @@ class MainActivity : BaseActivity() {
     override fun getLayout() = R.layout.activity_main
 
     override fun initView() {
-        immersionBar {
-            statusBarDarkFont(true)
-            fitsSystemWindows(true)
-        }
-
         val navView: BottomNavigationView = findViewById(R.id.bottom_nav)
         val navController = findNavController(R.id.nav_fragment)
         navView.setupWithNavController(navController)
