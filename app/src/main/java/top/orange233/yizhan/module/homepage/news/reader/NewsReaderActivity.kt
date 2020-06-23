@@ -1,15 +1,19 @@
 package top.orange233.yizhan.module.homepage.news.reader
 
+import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.gyf.immersionbar.ktx.immersionBar
 import kotlinx.android.synthetic.main.activity_news_reader.*
 import top.orange233.yizhan.R
 import top.orange233.yizhan.module.base.BaseActivity
+import top.orange233.yizhan.widget.CommentEditPopup
 
-class NewsReaderActivity : BaseActivity(), NewsReaderContract.View {
+class NewsReaderActivity : BaseActivity(), NewsReaderContract.View,
+    CommentEditPopup.CommitButtonOnClickListener {
     companion object {
         const val NEWS_ID = "news_id"
         const val NEWS_URL = "news_url"
@@ -63,6 +67,10 @@ class NewsReaderActivity : BaseActivity(), NewsReaderContract.View {
         }
         refresh_layout.setOnLoadMoreListener { presenter.loadMoreComment() }
         refresh_layout.autoRefresh()
+
+        fab_and_comment.setOnClickListener {
+            CommentEditPopup(this, this).showPopupWindow()
+        }
     }
 
     override fun finishRefreshPage() {
@@ -71,5 +79,9 @@ class NewsReaderActivity : BaseActivity(), NewsReaderContract.View {
 
     override fun finishLoadMore() {
         refresh_layout.finishLoadMore()
+    }
+
+    override fun onCommitButtonClick(contentView: View) {
+        Snackbar.make(contentView, "提交成功", Snackbar.LENGTH_SHORT).show()
     }
 }
