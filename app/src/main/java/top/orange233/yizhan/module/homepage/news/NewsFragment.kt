@@ -35,10 +35,14 @@ class NewsFragment : BaseFragment(), NewsContract.View {
     override fun getViewContext(): Context = requireContext()
 
     override fun finishRefresh() {
-        refresh_layout.finishRefresh(true)
+        if (refresh_layout != null) {
+            refresh_layout.finishRefresh(true)
+        }
     }
 
     override fun finishLoadMore() {
-        refresh_layout.finishLoadMore(true)
+        if (refresh_layout != null) {
+            refresh_layout.finishLoadMore(true)
+        }
     }
 }
