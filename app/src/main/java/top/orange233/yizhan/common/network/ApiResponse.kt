@@ -1,6 +1,7 @@
 package top.orange233.yizhan.common.network
 
 import com.google.gson.annotations.SerializedName
+import top.orange233.yizhan.data.Anime
 import top.orange233.yizhan.data.News
 
 data class LatestNews(
@@ -13,3 +14,18 @@ data class BeforeNews(
     val date: String,
     val stories: List<News>
 )
+
+data class LatestAnime(
+    var code: Int?,
+    var data: Data?,
+    var message: String?
+) {
+    data class Data(
+        @SerializedName("has_next")
+        var hasNext: Int?,
+        var list: List<Anime>?,
+        var num: Int?,
+        var size: Int?,
+        var total: Int?
+    )
+}
