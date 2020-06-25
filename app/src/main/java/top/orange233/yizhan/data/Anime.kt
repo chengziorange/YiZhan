@@ -2,7 +2,6 @@ package top.orange233.yizhan.data
 
 import com.google.gson.annotations.SerializedName
 
-// TODO
 data class Anime(
     var badge: String?,
     var badgeType: Int?,
@@ -20,5 +19,13 @@ data class Anime(
     var seasonId: Int?,
     var title: String?,
     @SerializedName("title_icon")
-    var titleIcon: String?
+    var titleIcon: String?,
+    @SerializedName("name")
+    var searchResultName: String?,
+    @SerializedName("url")
+    var searchResultUrl: String?,
+    @SerializedName("genre")
+    var searchResultGenre: String?,
+    @SerializedName("time")
+    var searchResultTime: String?
 )

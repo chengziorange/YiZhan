@@ -1,9 +1,12 @@
 package top.orange233.yizhan.module.homepage.anime
 
+import android.content.Intent
+import com.orhanobut.logger.Logger
 import top.orange233.yizhan.common.repository.AnimeRepository
 import top.orange233.yizhan.data.Anime
 
-class AnimePresenter(private val view: AnimeContract.View) : AnimeContract.Presenter {
+class AnimePresenter(private val view: AnimeContract.View) : AnimeContract.Presenter,
+    AnimeAdapter.ItemViewOnClickListener {
     private var animeList: MutableList<Anime>? = null
     private var animeAdapter: AnimeAdapter? = null
     private var pageToLoad = 2
@@ -15,9 +18,8 @@ class AnimePresenter(private val view: AnimeContract.View) : AnimeContract.Prese
             .subscribe({
                 val filteredList: MutableList<Anime> = it.data!!.list!!.toMutableList()
                 it.data!!.list!!.forEach { item ->
-                    if (item.title!!.contains("（僅限台灣地區）")
-                        || item.title!!.contains("（僅限港澳台地區）")
-                        || item.title!!.contains("（僅限港澳台及其他地區）")
+                    if (item.title!!.contains("台灣")
+                        || item.title!!.contains("港澳")
                     ) {
                         filteredList.remove(item)
                     }
@@ -58,7 +60,34 @@ class AnimePresenter(private val view: AnimeContract.View) : AnimeContract.Prese
             animeList = mutableListOf()
         }
         if (animeAdapter == null) {
-            animeAdapter = AnimeAdapter(animeList)
+            animeAdapter = AnimeAdapter(animeList, this)
         }
+    }
+
+    override fun onClickAnime(anime: Anime) {
+        Logger.d("clicked anime")
+        val intent = Intent(view.getViewContext(), AnimeSearchActivity::class.java)
+        intent.putExtra(AnimeSearchActivity.ANIME_NAME, anime.title!!.split(Regex(" "), 2)[0])
+        intent.putExtra(AnimeSearchActivity.ANIME_IMAGE, anime.cover)
+        view.getViewContext().startActivity(intent)
+    }
+
+    // TODO 优化
+    private fun formatAnimeName(name: String): String {
+        val nameWithoutBlank = name.split(Regex(" "), 1)[0]
+        val pureChinese = Regex("^[\\u4e00-\\u9fa5]{0,}\$")
+        val wordAndNum = Regex("^[A-Za-z0-9s!?]+\$")
+        if (nameWithoutBlank.matches(pureChinese)) {
+            return nameWithoutBlank.substring(
+                0,
+                if (nameWithoutBlank.length < 4) nameWithoutBlank.length else 4
+            )
+        }
+        val result: String
+        var index = 0
+        while (nameWithoutBlank.split(wordAndNum)[index] == "") {
+            index++
+        }
+        return nameWithoutBlank.split(wordAndNum)[index]
     }
 }

@@ -29,3 +29,9 @@ data class LatestAnime(
         var total: Int?
     )
 }
+
+data class SearchAnime(
+    var code: Int?,
+    var message: String?,
+    var list: List<Anime>?
+)
