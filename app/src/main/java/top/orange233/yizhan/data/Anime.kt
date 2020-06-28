@@ -27,5 +27,8 @@ data class Anime(
     @SerializedName("genre")
     var searchResultGenre: String?,
     @SerializedName("time")
-    var searchResultTime: String?
+    var searchResultTime: String?,
+    var searchResultCover: String? = cover,
+    @SerializedName("introduce")
+    var searchResultIntroduce: String?
 )

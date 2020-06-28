@@ -1,7 +1,9 @@
 package top.orange233.yizhan.module.homepage.anime
 
+import android.content.Intent
 import top.orange233.yizhan.common.repository.AnimeRepository
 import top.orange233.yizhan.data.Anime
+import top.orange233.yizhan.module.homepage.anime.player.AnimePlayerActivity
 
 class AnimeSearchPresenter(private val view: AnimeSearchContract.View) :
     AnimeSearchContract.Presenter,
@@ -32,11 +34,13 @@ class AnimeSearchPresenter(private val view: AnimeSearchContract.View) :
             animeList = mutableListOf()
         }
         if (animeSearchAdapter == null) {
-            animeSearchAdapter = AnimeSearchAdapter(animeList)
+            animeSearchAdapter = AnimeSearchAdapter(animeList, this)
         }
     }
 
     override fun onClickAnime(anime: Anime) {
-        //TODO("Not yet implemented")
+        val intent = Intent(view.getViewContext(), AnimePlayerActivity::class.java)
+        intent.putExtra(AnimePlayerActivity.ANIME_EPISODE_URL, anime.searchResultUrl)
+        view.getViewContext().startActivity(intent)
     }
 }

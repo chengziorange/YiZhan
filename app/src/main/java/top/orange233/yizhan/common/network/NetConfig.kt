@@ -14,5 +14,6 @@ class NetConfig {
         const val METHOD_GET_LATEST_ANIME =
             "result?season_version=-1&area=-1&is_finish=-1&copyright=-1&season_status=-1&season_month=-1&year=-1&style_id=-1&order=0&st=1&sort=0&season_type=1&pagesize=20&type=1"
         const val METHOD_SEARCH_ANIME_BY_NAME = "."
+        const val METHOD_GET_EPISODE_INFO = "."
     }
 }

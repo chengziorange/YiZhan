@@ -36,4 +36,9 @@ class AnimeRepository private constructor() {
         animeSearchService.searchAnime(name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+
+    fun getEpisodeInfo(url: String) =
+        animeSearchService.getEpisodeInfo(url)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 }

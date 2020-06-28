@@ -2,6 +2,7 @@ package top.orange233.yizhan.common.network
 
 import com.google.gson.annotations.SerializedName
 import top.orange233.yizhan.data.Anime
+import top.orange233.yizhan.data.AnimeEpisode
 import top.orange233.yizhan.data.News
 
 data class LatestNews(
@@ -34,4 +35,11 @@ data class SearchAnime(
     var code: Int?,
     var message: String?,
     var list: List<Anime>?
+)
+
+data class AnimeWithUrl(
+    var code: Int?,
+    var message: String?,
+    var date: Anime,
+    var list: List<AnimeEpisode>?
 )

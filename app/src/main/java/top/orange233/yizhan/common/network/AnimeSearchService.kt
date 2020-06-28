@@ -13,6 +13,9 @@ interface AnimeSearchService {
     @GET(NetConfig.Anime.METHOD_SEARCH_ANIME_BY_NAME)
     fun searchAnime(@Query("ysname") name: String): Single<SearchAnime>
 
+    @GET(NetConfig.Anime.METHOD_GET_EPISODE_INFO)
+    fun getEpisodeInfo(@Query("ysurl") url: String): Single<AnimeWithUrl>
+
     companion object {
         fun create(): AnimeSearchService {
             val retrofit = Retrofit.Builder()
