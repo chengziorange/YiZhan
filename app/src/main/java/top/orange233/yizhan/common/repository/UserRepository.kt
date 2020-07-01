@@ -26,8 +26,23 @@ class UserRepository private constructor(private val userService: UserService) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun changeProfile(userName: String?, password: String?, avatarBase64: String?, gender: String?) =
+    fun changeProfile(
+        userName: String?,
+        password: String?,
+        avatarBase64: String?,
+        gender: String?
+    ) =
         userService.changeProfile(userName, password, avatarBase64, gender)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
+    fun getNewsComment(newsId: String) =
+        userService.getNewsComment(newsId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
+    fun addNewsComment(newsId: String, content: String) =
+        userService.addNewsComment(newsId, content)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 }

@@ -3,6 +3,7 @@ package top.orange233.yizhan.module.homepage.news.reader
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.widget.EditText
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -20,6 +21,7 @@ class NewsReaderActivity : BaseActivity(), NewsReaderContract.View,
         const val NEWS_TITLE = "news_title"
     }
 
+    private lateinit var popup: CommentEditPopup
     private lateinit var presenter: NewsReaderPresenter
 
     override fun getLayout(): Int = R.layout.activity_news_reader
@@ -69,19 +71,37 @@ class NewsReaderActivity : BaseActivity(), NewsReaderContract.View,
         refresh_layout.autoRefresh()
 
         fab_and_comment.setOnClickListener {
-            CommentEditPopup(this, this).showPopupWindow()
+            popup = CommentEditPopup(this, this)
+            popup.showPopupWindow()
         }
     }
 
     override fun finishRefreshPage() {
+        presenter.getAdapter().notifyDataSetChanged()
         refresh_layout.finishRefresh()
     }
 
     override fun finishLoadMore() {
+        presenter.getAdapter().notifyDataSetChanged()
         refresh_layout.finishLoadMore()
     }
 
     override fun onCommitButtonClick(contentView: View) {
-        Snackbar.make(contentView, "提交成功", Snackbar.LENGTH_SHORT).show()
+        val editText: EditText = contentView.findViewById(R.id.et_comment_content)
+        presenter.addComment(editText.text.toString())
+    }
+
+    override fun getNewsId(): String {
+        return intent.getStringExtra(NEWS_URL)!!
+    }
+
+    override fun commentFail() {
+        Snackbar.make(rv_news_comment, "您还未登录！", Snackbar.LENGTH_SHORT).show()
+        popup.dismiss()
+    }
+
+    override fun commentSuccess() {
+        Snackbar.make(rv_news_comment, "提交成功", Snackbar.LENGTH_SHORT).show()
+        popup.dismiss()
     }
 }

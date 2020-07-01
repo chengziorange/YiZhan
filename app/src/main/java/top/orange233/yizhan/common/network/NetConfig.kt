@@ -23,5 +23,7 @@ class NetConfig {
         const val METHOD_REGISTER = "register"
         const val METHOD_GET_PROFILE = "profile"
         const val METHOD_CHANGE_PROFILE = "profile"
+        const val METHOD_GET_NEWS_COMMENT = "news/comment"
+        const val METHOD_ADD_NEWS_COMMENT = "news/comment"
     }
 }

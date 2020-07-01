@@ -6,11 +6,15 @@ class NewsReaderContract {
     interface View {
         fun finishRefreshPage()
         fun finishLoadMore()
+        fun getNewsId(): String
+        fun commentFail()
+        fun commentSuccess()
     }
 
     interface Presenter : BasePresenter {
         fun getAdapter(): NewsCommentAdapter
         fun refreshPage()
         fun loadMoreComment()
+        fun addComment(content: String)
     }
 }

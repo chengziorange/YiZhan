@@ -5,16 +5,16 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface UserService {
 
     @FormUrlEncoded
     @POST(NetConfig.Backend.METHOD_LOGIN)
-    fun login(@Field("user_id") userId: String, @Field("password") password: String): Single<Login>
+    fun login(
+        @Field("user_id") userId: String,
+        @Field("password") password: String
+    ): Single<SingleStatus>
 
     @FormUrlEncoded
     @POST(NetConfig.Backend.METHOD_REGISTER)
@@ -38,6 +38,15 @@ interface UserService {
         @Field("gender")
         gender: String?
     ): Single<Profile>
+
+    @GET(NetConfig.Backend.METHOD_GET_NEWS_COMMENT)
+    fun getNewsComment(@Query("news_id") newsId: String): Single<NewsCommentResponse>
+
+    @POST(NetConfig.Backend.METHOD_ADD_NEWS_COMMENT)
+    fun addNewsComment(
+        @Query("news_id") newsId: String,
+        @Query("content") content: String
+    ): Single<SingleStatus>
 
     companion object {
         fun create(): UserService {

@@ -9,6 +9,7 @@ data class NewsComment(
     @SerializedName("user_id")
     var userId: String?,
 
+    @SerializedName("user_name")
     var username: String?,
 
     @SerializedName("create_time")

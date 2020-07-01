@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import top.orange233.yizhan.data.Anime
 import top.orange233.yizhan.data.AnimeEpisode
 import top.orange233.yizhan.data.News
+import top.orange233.yizhan.data.NewsComment
 
 data class LatestNews(
     val date: String,
@@ -44,7 +45,7 @@ data class AnimeWithUrl(
     var list: List<AnimeEpisode>?
 )
 
-data class Login(
+data class SingleStatus(
     var status: Int
 )
 
@@ -66,4 +67,9 @@ data class Profile(
     var gender: String?,
     @SerializedName("register_time")
     var registerTime: String?
+)
+
+data class NewsCommentResponse(
+    var status: Int,
+    var comments: List<NewsComment>
 )
