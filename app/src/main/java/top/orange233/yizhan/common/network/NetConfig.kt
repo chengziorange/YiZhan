@@ -16,4 +16,12 @@ class NetConfig {
         const val METHOD_SEARCH_ANIME_BY_NAME = "."
         const val METHOD_GET_EPISODE_INFO = "."
     }
+
+    object Backend {
+        const val BASE_URL = "https://yizhan.orange233.top/api/v1/"
+        const val METHOD_LOGIN = "login"
+        const val METHOD_REGISTER = "register"
+        const val METHOD_GET_PROFILE = "profile"
+        const val METHOD_CHANGE_PROFILE = "profile"
+    }
 }

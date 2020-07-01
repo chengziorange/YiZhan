@@ -43,3 +43,27 @@ data class AnimeWithUrl(
     var date: Anime,
     var list: List<AnimeEpisode>?
 )
+
+data class Login(
+    var status: Int
+)
+
+data class Register(
+    @SerializedName("user_id")
+    var userId: String?,
+    var status: Int
+)
+
+data class Profile(
+    var status: Int,
+    @SerializedName("user_id")
+    var userId: String?,
+    var email: String?,
+    @SerializedName("user_name")
+    var userName: String?,
+    @SerializedName("avatar_url")
+    var avatarUrl: String?,
+    var gender: String?,
+    @SerializedName("register_time")
+    var registerTime: String?
+)
