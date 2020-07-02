@@ -39,25 +39,30 @@ class ProfileEditPresenter(private val view: ProfileEditContract.View) :
         avatarPath: String?,
         gender: String?
     ) {
+        Logger.d("on changeProfile")
         try {
-            val file =
-                Luban.with(view.getViewContext()).load(avatarPath).filter { true }.ignoreBy(500)
-                    .get()[0]
-            val byteArray = ByteArray(file.length().toInt())
-            val fis = FileInputStream(file)
-            fis.read(byteArray)
-            fis.close()
-            val avatarBase64 =
-                Base64.encodeToString(byteArray, 0, file.length().toInt(), Base64.DEFAULT)
-            Log.d("TAG", avatarBase64)
-            Preference.instance.putValue(Preference.KEY_AVATAR_PATH, avatarPath)
-            UserRepository.getInstance().changeProfile(userName, password, avatarBase64, gender)
-                .subscribe({
-                    when (it.status) {
-                        201 -> view.changeProfileSuccess()
-                    }
-                }, { it.printStackTrace() })
+            var avatarBase64: String? = null
+            if (avatarPath != null) {
+                val file =
+                    Luban.with(view.getViewContext()).load(avatarPath).filter { true }.ignoreBy(500)
+                        .get()[0]
+                val byteArray = ByteArray(file.length().toInt())
+                val fis = FileInputStream(file)
+                fis.read(byteArray)
+                fis.close()
+                avatarBase64 =
+                    Base64.encodeToString(byteArray, 0, file.length().toInt(), Base64.DEFAULT)
+                Preference.instance.putValue(Preference.KEY_AVATAR_PATH, avatarPath)
+            } else {
+                UserRepository.getInstance().changeProfile(userName, password, avatarBase64, gender)
+                    .subscribe({
+                        when (it.status) {
+                            201 -> view.changeProfileSuccess()
+                        }
+                    }, { it.printStackTrace() })
+            }
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

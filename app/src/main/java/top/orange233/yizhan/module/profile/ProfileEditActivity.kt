@@ -52,6 +52,7 @@ class ProfileEditActivity : BaseActivity(), ProfileEditContract.View {
         }
 
         btn_submit.setOnClickListener {
+            Logger.d("submit button onclick")
             val userName = profile_edit_username_edittext.text.toString()
             val password = profile_edit_password_edittext.text.toString()
             val gender = when (radioGroup.checkedRadioButtonId) {
@@ -165,5 +166,6 @@ class ProfileEditActivity : BaseActivity(), ProfileEditContract.View {
 
     override fun changeProfileSuccess() {
         Snackbar.make(iv_avatar, "修改成功！", Snackbar.LENGTH_SHORT).show()
+        finish()
     }
 }

@@ -15,5 +15,5 @@ object DateFormatter {
         return cal
     }
 
-    fun formatCommentDate(unixTimestamp: Long) = commentFormatter.format(Date(unixTimestamp))
+    fun formatCommentDate(unixTimestamp: Long) = commentFormatter.format(Date(unixTimestamp * 1000))
 }

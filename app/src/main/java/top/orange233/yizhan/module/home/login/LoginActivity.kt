@@ -42,7 +42,10 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     override fun notifyRegisterResult(status: Int) {
         when (status) {
-            201 -> Snackbar.make(iv_logo, "注册成功", Snackbar.LENGTH_SHORT).show()
+            201 -> {
+                Snackbar.make(iv_logo, "注册成功", Snackbar.LENGTH_SHORT).show()
+                finish()
+            }
             404 -> Snackbar.make(iv_logo, "此邮箱已被注册", Snackbar.LENGTH_SHORT).show()
             500 -> Snackbar.make(iv_logo, "服务器内部错误", Snackbar.LENGTH_SHORT).show()
         }
