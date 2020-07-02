@@ -8,7 +8,7 @@ class Preference private constructor() {
     companion object {
         const val KEY_COOKIE_JSESSIONID = "JSESSIONID"
         const val KEY_IS_LOGGED_IN = "IS_LOGGED_IN"
-        const val KEY_PROFILE_CHANGED = "PROFILE_CHANGED"
+        const val KEY_AVATAR_PATH = "AVATAR_PATH"
 
         private val sp = YiZhanApp.context.getSharedPreferences(
             YiZhanApp.context.packageName,

@@ -9,12 +9,14 @@ import top.orange233.yizhan.module.homepage.news.NewsFragment
 
 class HomepageAdapter(fm: FragmentManager) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    //    private val homepageFragments: List<Fragment> =
+//        listOf(NewsFragment(), ComicFragment(), AnimeFragment())
     private val homepageFragments: List<Fragment> =
-        listOf(NewsFragment(), ComicFragment(), AnimeFragment())
+        listOf(NewsFragment(), AnimeFragment())
 
     override fun getItem(position: Int): Fragment = homepageFragments[position]
 
     override fun getCount(): Int = homepageFragments.size
 
-    override fun getPageTitle(position: Int): CharSequence? = listOf("资讯", "漫画", "番剧")[position]
+    override fun getPageTitle(position: Int): CharSequence? = listOf("资讯", "番剧")[position]
 }

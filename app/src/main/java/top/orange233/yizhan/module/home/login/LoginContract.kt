@@ -8,6 +8,7 @@ interface LoginContract {
         fun getViewContext(): Context
         fun notifyRegisterResult(status: Int)
         fun updateProfile()
+        fun notifyLoginResult(status: Int)
     }
 
     interface Presenter : BasePresenter {

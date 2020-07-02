@@ -41,7 +41,7 @@ data class SearchAnime(
 data class AnimeWithUrl(
     var code: Int?,
     var message: String?,
-    var date: Anime,
+    var data: Anime,
     var list: List<AnimeEpisode>?
 )
 

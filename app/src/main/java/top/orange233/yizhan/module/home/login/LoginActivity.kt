@@ -42,7 +42,16 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     override fun notifyRegisterResult(status: Int) {
         when (status) {
-            201 -> Snackbar.make(iv_logo, "注册成功", Snackbar.LENGTH_SHORT)
+            201 -> Snackbar.make(iv_logo, "注册成功", Snackbar.LENGTH_SHORT).show()
+            404 -> Snackbar.make(iv_logo, "此邮箱已被注册", Snackbar.LENGTH_SHORT).show()
+            500 -> Snackbar.make(iv_logo, "服务器内部错误", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun notifyLoginResult(status: Int) {
+        when (status) {
+            422, 404 -> Snackbar.make(iv_logo, "用户不存在或密码错误", Snackbar.LENGTH_SHORT).show()
+            405 -> Snackbar.make(iv_logo, "此账号已被冻结!", Snackbar.LENGTH_SHORT).show()
         }
     }
 

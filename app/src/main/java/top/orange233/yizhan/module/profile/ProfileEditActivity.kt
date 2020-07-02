@@ -2,38 +2,30 @@ package top.orange233.yizhan.module.profile
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Handler
 import android.provider.MediaStore
-import android.util.Base64
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.gyf.immersionbar.ktx.immersionBar
 import com.orhanobut.logger.Logger
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_profile_edit.*
 import top.orange233.yizhan.R
-import top.orange233.yizhan.common.repository.UserRepository
+import top.orange233.yizhan.common.network.Profile
 import top.orange233.yizhan.module.base.BaseActivity
-import top.orange233.yizhan.module.home.login.LoginActivity
-import top.orange233.yizhan.util.Preference
-import top.zibin.luban.Luban
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
-import java.lang.Exception
 
-class ProfileEditActivity : BaseActivity() {
+class ProfileEditActivity : BaseActivity(), ProfileEditContract.View {
     private val REQUEST_PICK_PHOTO = 1
     private val REQUEST_FILE_PERMISSION = 2
     private var avatarUri: Uri? = null
     private var avatarPath: String? = null
+
+    private lateinit var presenter: ProfileEditContract.Presenter
 
     override fun getLayout(): Int = R.layout.activity_profile_edit
 
@@ -43,31 +35,10 @@ class ProfileEditActivity : BaseActivity() {
             statusBarDarkFont(false)
         }
 
-        UserRepository.getInstance().getProfile()
-            .subscribe({
-                Logger.d(it)
-                when (it.status) {
-                    201 -> {
-                        profile_edit_username_edittext.setText(it.userName)
+        presenter = ProfileEditPresenter(this)
+        presenter.start()
 
-                        Glide.with(this).load(it.avatarUrl?.replace("http://", "https://"))
-                            .into(iv_avatar)
-
-                        when (it.gender) {
-                            "女" -> rbtn_woman.isChecked = true
-                            else -> rbtn_man.isChecked = true
-                        }
-                    }
-                    401 -> {
-                        Preference.instance.putValue(Preference.KEY_IS_LOGGED_IN, false)
-                        val intent = Intent(this, LoginActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-            }, {})
-
-        iv_avatar.postDelayed({ requestFileReadPermission() }, 1000)
+        Handler().postDelayed({ requestFileReadPermission() }, 1000)
     }
 
     override fun initEvent() {
@@ -78,6 +49,20 @@ class ProfileEditActivity : BaseActivity() {
         btn_pick_avatar.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, REQUEST_PICK_PHOTO)
+        }
+
+        btn_submit.setOnClickListener {
+            val userName = profile_edit_username_edittext.text.toString()
+            val password = profile_edit_password_edittext.text.toString()
+            val gender = when (radioGroup.checkedRadioButtonId) {
+                R.id.rbtn_woman -> "女"
+                else -> "男"
+            }
+            presenter.changeProfile(userName, password, avatarPath, gender)
+        }
+
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            Logger.d("checked radioId is $checkedId")
         }
     }
 
@@ -113,7 +98,7 @@ class ProfileEditActivity : BaseActivity() {
                 // result of the request.
             }
         } else {
-            initSubmitButton()
+            Snackbar.make(iv_avatar, "成功获取读取图片权限", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -129,7 +114,7 @@ class ProfileEditActivity : BaseActivity() {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    initSubmitButton()
+                    Snackbar.make(iv_avatar, "成功获取读取图片权限", Snackbar.LENGTH_SHORT).show()
                 }
                 return
             }
@@ -143,62 +128,42 @@ class ProfileEditActivity : BaseActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             avatarUri = data?.data
             avatarPath = avatarUri?.path?.replace("/raw//storage", "/storage")
             Logger.d("returned url path is $avatarPath")
         }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onResume() {
+        super.onResume()
         if (avatarUri != null) {
             Glide.with(this).load(avatarUri)
                 .into(iv_avatar)
             avatarUri = null
         }
-        super.onResume()
     }
 
-    private fun initSubmitButton() {
-        btn_submit.setOnClickListener {
-            val userName = profile_edit_username_edittext.text.toString()
-            val password = profile_edit_password_edittext.text.toString()
+    override fun autoCompleteProfile(profile: Profile) {
+        profile_edit_username_edittext.setText(profile.userName)
 
-            Logger.d(avatarPath)
+        Glide.with(this).load(profile.avatarUrl?.replace("http://", "https://"))
+            .into(iv_avatar)
 
-//            val file = File(avatarPath)
-            // TODO dirty code
-            var avatarBase64: String? = null
-            try {
-                val file = Luban.with(this).load(avatarPath).filter { true }.ignoreBy(100).get()[0]
-                val buf = BufferedInputStream(FileInputStream(file))
-                val byteArray = ByteArray(file.length().toInt())
-                buf.read(byteArray, 0, byteArray.size)
-                buf.close()
-                avatarBase64 =
-                    "data:image/jpg;base64," + Base64.encodeToString(byteArray, Base64.DEFAULT)
-            } catch (e: Exception) {
-            }
-
-            val gender = when (radioGroup.checkedRadioButtonId) {
-                1 -> "女"
-                else -> "男"
-            }
-            UserRepository.getInstance().changeProfile(
-                if (userName == "") null else userName,
-                if (password == "") null else password,
-                avatarBase64,
-                gender
-            ).subscribe({
-                when (it.status) {
-                    201 -> {
-                        Snackbar.make(iv_avatar, "修改成功！", Snackbar.LENGTH_SHORT).show()
-                        Preference.instance.putValue(Preference.KEY_PROFILE_CHANGED, true)
-                    }
-                    else -> Logger.d(it)
-                }
-            }, { it.printStackTrace() })
+        when (profile.gender) {
+            "女" -> rbtn_woman.isChecked = true
+            else -> rbtn_man.isChecked = true
         }
+    }
+
+    override fun autoCompleteProfileFail() {
+        Snackbar.make(iv_avatar, "更新个人资料失败", Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun getViewContext(): Context = this
+
+    override fun changeProfileSuccess() {
+        Snackbar.make(iv_avatar, "修改成功！", Snackbar.LENGTH_SHORT).show()
     }
 }

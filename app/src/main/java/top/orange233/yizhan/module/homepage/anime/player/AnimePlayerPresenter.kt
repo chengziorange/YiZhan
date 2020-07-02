@@ -13,6 +13,7 @@ class AnimePlayerPresenter(private val view: AnimePlayerContract.View) :
         AnimeRepository.getAnimeSearchInstance().getEpisodeInfo(animeUrl)
             .subscribe({
                 view.loadEpisode(it)
+                view.loadWrapper(it)
             }, {})
     }
 }

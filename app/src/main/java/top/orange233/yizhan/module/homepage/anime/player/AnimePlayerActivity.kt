@@ -59,7 +59,8 @@ class AnimePlayerActivity : BaseActivity(), AnimePlayerContract.View {
             animeWithUrl.list?.get(0)?.num
         )
         animeWithUrl.list?.let { createEpisodeList(it) }
-//        Glide.with(this).load(animeWithUrl.date.searchResultCover).into(iv_anime_image)
+        Logger.e("loadEpisode: animeWithUrl: $animeWithUrl")
+//        Glide.with(iv_anime_image).load(animeWithUrl.date.searchResultCover).into(iv_anime_image)
 //        Logger.e("anime name is ${animeWithUrl.date.searchResultName}")
 //        Logger.e("anime info is ${animeWithUrl.date.searchResultIntroduce}")
 //        tv_anime_name.text = animeWithUrl.date.searchResultName
@@ -81,6 +82,16 @@ class AnimePlayerActivity : BaseActivity(), AnimePlayerContract.View {
             }
             episode_box.addView(relativeLayout)
         }
+    }
+
+    override fun loadWrapper(animeWithUrl: AnimeWithUrl) {
+        Logger.e("loadWrapper: animeWithUrl: $animeWithUrl")
+        Glide.with(this).load(animeWithUrl.data.cover)
+            .into(iv_anime_image)
+//        Logger.e("anime name is ${animeWithUrl.data.searchResultName}")
+//        Logger.e("anime info is ${animeWithUrl.data.searchResultIntroduce}")
+        tv_anime_name.text = animeWithUrl.data.searchResultName
+        tv_anime_info.text = animeWithUrl.data.searchResultIntroduce
     }
 
     private fun initPlayer() {

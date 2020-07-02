@@ -9,13 +9,15 @@ import com.gyf.immersionbar.ktx.immersionBar
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.fragment_profile.*
 import top.orange233.yizhan.R
-import top.orange233.yizhan.common.repository.UserRepository
+import top.orange233.yizhan.common.network.Profile
 import top.orange233.yizhan.module.base.BaseFragment
 import top.orange233.yizhan.module.home.login.LoginActivity
 import top.orange233.yizhan.util.Preference
 
-class ProfileFragment : BaseFragment() {
-    private var isLoggedIn = Preference.instance.getValue(Preference.KEY_IS_LOGGED_IN, false)
+class ProfileFragment : BaseFragment(), ProfileContract.View {
+    private var isLoggedIn: Boolean = false
+
+    private lateinit var presenter: ProfilePresenter
 
     override fun getLayout(): Int = R.layout.fragment_profile
 
@@ -25,22 +27,32 @@ class ProfileFragment : BaseFragment() {
             statusBarColor(R.color.colorPrimary)
             statusBarDarkFont(false)
         }
+
+        presenter = ProfilePresenter(this)
+        presenter.start()
+
+        tv_profile_user_name.text = "点击登录"
     }
 
     override fun initEvent() {
-        profile_avator.setOnClickListener {
+        val loginListener = View.OnClickListener {
             if (!isLoggedIn) {
                 val intent = Intent(context, LoginActivity::class.java)
                 startActivity(intent)
             }
         }
+        profile_avator.setOnClickListener(loginListener)
+        tv_profile_user_name.setOnClickListener(loginListener)
 
         change_profile_layout.setOnClickListener {
-            val intent = Intent(context, ProfileEditActivity::class.java)
-            startActivity(intent)
+            if (!isLoggedIn) loginListener else {
+                val intent = Intent(context, ProfileEditActivity::class.java)
+                startActivity(intent)
+            }
         }
 
-        if (Preference.instance.getValue(Preference.KEY_IS_LOGGED_IN, false)) {
+        if (isLoggedIn) {
+            btn_logout.visibility = View.VISIBLE
             btn_logout.setOnClickListener {
                 Preference.instance.putValue(Preference.KEY_IS_LOGGED_IN, false)
                 Preference.instance.putValue(Preference.KEY_COOKIE_JSESSIONID, "233")
@@ -52,40 +64,40 @@ class ProfileFragment : BaseFragment() {
     }
 
     override fun onResume() {
-        checkProfileChanges()
         super.onResume()
+        isLoggedIn = Preference.instance.getValue(Preference.KEY_IS_LOGGED_IN, false)
+        Logger.d("isLoggedIn in ProfileFragment is $isLoggedIn")
+        if (isLoggedIn) {
+            Logger.d("fetchProfile")
+            presenter.fetchProfile()
+        }
     }
 
-    private fun checkProfileChanges() {
-        Logger.d("checkProfileChanges invoked")
-        if (Preference.instance.getValue(Preference.KEY_PROFILE_CHANGED, false)
-            || Preference.instance.getValue(Preference.KEY_IS_LOGGED_IN, false)
-        ) {
-            // TODO dirty code, change to MVP later
-            UserRepository.getInstance().getProfile()
-                .subscribe({
-                    when (it.status) {
-                        200 -> {
-                            Glide.with(this)
-                                .load(it.avatarUrl)
-                                .placeholder(R.drawable.ic_account_circle)
-                                .transform(CenterCrop(), CircleCrop())
-                                .into(profile_avator)
+    override fun updateProfile(profile: Profile) {
+        val localAvatar = Preference.instance.getValue(Preference.KEY_AVATAR_PATH, "")
 
-                            tv_profile_user_name.text = it.userName
+        Glide.with(this)
+            .load(localAvatar)
+            .placeholder(R.drawable.ic_account_circle)
+            .transform(CenterCrop(), CircleCrop())
+            .into(profile_avator)
 
-                            when (it.gender) {
-                                "女" -> iv_gender.setImageResource(R.drawable.ic_woman)
-                                else -> iv_gender.setImageResource(R.drawable.ic_man)
-                            }
-                        }
-                        else -> Logger.d(it)
-                    }
-                    Preference.instance.putValue(Preference.KEY_PROFILE_CHANGED, false)
-                }, {
-                    it.printStackTrace()
-                })
+        tv_profile_user_name.text = profile.userName
+
+        when (profile.gender) {
+            "女" -> iv_gender.setImageResource(R.drawable.ic_woman)
+            else -> iv_gender.setImageResource(R.drawable.ic_man)
+        }
+
+        if (isLoggedIn) {
             btn_logout.visibility = View.VISIBLE
+            btn_logout.setOnClickListener {
+                Preference.instance.putValue(Preference.KEY_IS_LOGGED_IN, false)
+                Preference.instance.putValue(Preference.KEY_COOKIE_JSESSIONID, "233")
+                activity?.onBackPressed()
+            }
+        } else {
+            btn_logout.visibility = View.GONE
         }
     }
 }

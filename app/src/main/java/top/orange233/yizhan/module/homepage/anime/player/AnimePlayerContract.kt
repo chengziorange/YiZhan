@@ -6,6 +6,7 @@ import top.orange233.yizhan.module.base.BasePresenter
 interface AnimePlayerContract {
     interface View {
         fun loadEpisode(animeWithUrl: AnimeWithUrl)
+        fun loadWrapper(animeWithUrl: AnimeWithUrl)
     }
 
     interface Presenter : BasePresenter {

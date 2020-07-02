@@ -11,8 +11,10 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
                 when (it.status) {
                     200 -> {
                         Preference.instance.putValue(Preference.KEY_IS_LOGGED_IN, true)
-                        Preference.instance.putValue(Preference.KEY_PROFILE_CHANGED, true)
                         view.updateProfile()
+                    }
+                    else -> {
+                        view.notifyLoginResult(it.status)
                     }
                 }
             }, {})
@@ -24,7 +26,10 @@ class LoginPresenter(private val view: LoginContract.View) : LoginContract.Prese
                 when (it.status) {
                     201 -> {
                         view.notifyRegisterResult(it.status)
-                        register(email, password)
+                        login(email, password)
+                    }
+                    else -> {
+                        view.notifyRegisterResult(it.status)
                     }
                 }
             }, {
